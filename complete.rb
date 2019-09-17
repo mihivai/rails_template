@@ -3,18 +3,19 @@ def add_gems
   source 'https://rubygems.org'
   ruby '#{RUBY_VERSION}'
 
-  #{"gem 'bootsnap', '1.2.0', require: false" if Rails.version >= "5.2"}
+  #{"gem 'bootsnap', require: false" if Rails.version >= "5.2"}
   gem 'devise'
   gem 'jbuilder', '~> 2.0'
   gem 'pg', '~> 0.21'
   gem 'puma'
   gem 'rails', '#{Rails.version}'
   gem 'redis'
-  gem 'jquery-rails'
+  #gem 'jquery-rails'
   #gem 'bootstrap', '~> 4.1.1'
   gem 'autoprefixer-rails'
-  gem 'font-awesome-sass', '~> 5.0.9'
-  gem 'sass-rails'
+  gem 'font-awesome-sass', '~> 5.6.1'
+  #gem 'sass-rails'
+  gem 'sassc-rails'
   gem 'simple_form'
   gem 'uglifier'
   gem 'webpacker'
@@ -404,7 +405,6 @@ JS
 run 'rm app/assets/javascripts/application.js'
 file 'app/assets/javascripts/application.js', <<-JS
 //= require rails-ujs
-//= require jquery
 //= require_tree .
 JS
 
@@ -612,20 +612,17 @@ JS
 
   inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
   <<-JS
-  // Bootstrap 3 has a dependency over jQuery:
-const webpack = require('webpack')
-
-// Preventing Babel from transpiling NodeModules packages
-environment.loaders.delete('nodeModules');
-// Bootstrap 4 has a dependency over jQuery & Popper.js:
-environment.plugins.prepend('Provide',
-  new webpack.ProvidePlugin({
-    $: 'jquery',
-    jQuery: 'jquery',
-    Popper: ['popper.js', 'default']
-  })
-)
-
+  const webpack = require('webpack')
+  // Preventing Babel from transpiling NodeModules packages
+  environment.loaders.delete('nodeModules');
+  // Bootstrap 4 has a dependency over jQuery & Popper.js:
+  environment.plugins.prepend('Provide',
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      Popper: ['popper.js', 'default']
+    })
+  )
   JS
   end
 
